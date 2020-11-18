@@ -349,6 +349,28 @@ slate.a11y = {
 
     $(document).off(eventName);
   },
+	
+  /* 2ten cart added */
+    lockMobileScrolling: function(namespace, $element) {
+      if ($element) {
+        var $el = $element;
+      } else {
+        var $el = $(document.documentElement).add('body');
+      }
+      $el.on('touchmove' + namespace, function () {
+        return false;
+      });
+    },
+
+    unlockMobileScrolling: function(namespace, $element) {
+      if ($element) {
+        var $el = $element;
+      } else {
+        var $el = $(document.documentElement).add('body');
+      }
+      $el.off(namespace);
+    },
+  /* end 2ten cart added */
 
   /**
    * Add aria-describedby attribute to external and new window links
@@ -615,9 +637,26 @@ theme.Currency = (function() {
 
     return formatString.replace(placeholderRegex, value);
   }
+/* 2ten cart added */	
+function getBaseUnit(variant) {
+  if (!variant) {
+	return;
+  }
 
+  if (!variant.unit_price_measurement || !variant.unit_price_measurement.reference_value) {
+	return;
+  }
+
+  return variant.unit_price_measurement.reference_value === 1
+	? variant.unit_price_measurement.reference_unit
+	: variant.unit_price_measurement.reference_value +
+		variant.unit_price_measurement.reference_unit;
+}
+/* end 2ten cart  */
+	
   return {
-    formatMoney: formatMoney
+    formatMoney: formatMoney,
+	  getBaseUnit: getBaseUnit /* 2ten cart added */ 
   };
 })();
 
